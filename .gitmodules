@@ -1,0 +1,3 @@
+[submodule "SDLGameTemplate"]
+	path = SDLGameTemplate
+	url = https://github.com/buracisko/SDLGameTemplate

@@ -1,0 +1,8 @@
+﻿  Building Custom Rule D:/Users/matya/OneDrive/Documents/SDL/mines/SDLGameTemplate/CMakeLists.txt
+  engine.cpp
+D:\Users\matya\OneDrive\Documents\SDL\mines\SDLGameTemplate\src\engine.cpp(138,13): warning C4305: 'argument': truncation from 'const double' to 'float'
+D:\Users\matya\OneDrive\Documents\SDL\mines\SDLGameTemplate\src\engine.cpp(146,21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  sprite.cpp
+  main.cpp
+  Generating Code...
+  SDLGameTemplate.vcxproj -> D:\Users\matya\OneDrive\Documents\SDL\mines\build\bin\Debug\SDLGameTemplate.exe

@@ -1,0 +1,10 @@
+^D:\USERS\MATYA\ONEDRIVE\DOCUMENTS\SDL\MINES\BUILD\CMAKEFILES\68751505638315878C0F52CEE72F7389\GENERATE.STAMP.RULE
+setlocal
+"D:\Program Files\CMake\bin\cmake.exe" -SD:/Users/matya/OneDrive/Documents/SDL/mines/SDLGameTemplate -BD:/Users/matya/OneDrive/Documents/SDL/mines/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Users/matya/OneDrive/Documents/SDL/mines/build/SDLGameTemplate.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
