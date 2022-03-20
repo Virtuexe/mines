@@ -12,11 +12,11 @@
 void Update(float dt);
 void RenderFrame(float dt);
 
-int grid_cell_size = 35;
+int grid_cell_size = 40;
 int grid_cell_sprite_size = grid_cell_size / 1.001;
-int const grid_width = 10;
-int const grid_height = 10;
-int grid_bomb = 10;
+int const grid_width = 15;
+int const grid_height = 13;
+int grid_bomb = 40;
 int WINDOW_WIDTH = (grid_width * grid_cell_size);
 int WINDOW_HEIGHT = (grid_height * grid_cell_size);
 
@@ -24,6 +24,16 @@ Uint32 mouse;
 int mouse_x, mouse_y;
 // Street texture
 Sprite num_test;
+Sprite num_1;
+Sprite num_2;
+Sprite num_3;
+Sprite num_4;
+Sprite num_5;
+Sprite num_6;
+Sprite num_7;
+Sprite num_8;
+Sprite num_9;
+Sprite flag;
 //=============================================================================-
 //information about cells in grid
 class grid_cell
@@ -32,7 +42,9 @@ private:
 	bool visible[grid_width][grid_height];
 	bool bomb[grid_width][grid_height];
 	bool selected[grid_width][grid_height];
+	bool flaged[grid_width][grid_height];
 	int bombAmmount[grid_width][grid_height];
+	int bombStreak;
 public:
 	void cell(int x, int y, bool visible, bool bomb)
 	{
@@ -48,6 +60,17 @@ public:
 		if (x >= grid_width || y >= grid_height || x < 0 || y < 0)
 			return;
 		this->visible[x][y] = visible;
+		flaged[x][y] = false;
+	}
+	bool isFlaged(int x, int y)
+	{
+		return flaged[x][y];
+	}
+	void setFlaged(int x, int y, bool flaged)
+	{
+		if (x >= grid_width || y >= grid_height || x < 0 || y < 0)
+			return;
+		this->flaged[x][y] = flaged;
 	}
 	bool isBomb(int x, int y)
 	{
@@ -79,21 +102,23 @@ public:
 	//also saves ammount of bombs around current cell
 	void destroyCell(int x, int y)
 	{
-		int mines = 0;
+		int bombs = 0;
 		if (x >= grid_width || y >= grid_height || x < 0 || y < 0)
 			return;
 		setVisible(x, y, true);
+		if (isBomb(x, y)) //if destroyed cell is bomb
+			return;
 		for (int h = y - 1; h <= y + 1; h++)
 		{
 			for (int w = x - 1; w <= x + 1; w++)
 			{
 				if (isBomb(w, h))
 				{
-					mines++;
+					bombs++;
 				}
 			}
 		}
-		if (mines == 0)
+		if (bombs == 0)
 		{
 			for (int h = y - 1; h <= y + 1; h++)
 			{
@@ -104,23 +129,61 @@ public:
 				}
 			}
 		}
-		bombAmmount[x][y] = mines;
+		bombAmmount[x][y] = bombs;
 		return;
 	}
+	void setStreak(int bombStreak)
+	{
+		if (this->bombStreak < bombStreak)
+		{
+			this->bombStreak = bombStreak;
+		}
+	}
+	void setStreak() //kills streak
+	{
+		bombStreak = 0;
+	}
+	int getStreak() //kills streak
+	{
+		return bombStreak;
+	}
 };
+Mix_Chunk* sound_sel;
 grid_cell myGrid; //create grid
 int main(int argc, char* argv[])
 {
+	int frequencia = 22050;
+	Uint16 formato = AUDIO_S16SYS;
+	int canal = 2; // 1 mono; 2 = stereo;
+	int buffer = 4096;
+	Mix_OpenAudio(frequencia, formato, canal, buffer);
+	//Play audio test
+	//Mix_PlayChannel(0, sound_test , 0);
+	Mix_Chunk* sound_test;
+
+	sound_test = Mix_LoadWAV("assets/test.wav");
+	
+
 	if (!InitSDL())
 	{
 		return 1;
 	}
 
-	if (!CreateWindow("The Game", WINDOW_WIDTH, WINDOW_HEIGHT))
+	if (!CreateWindow("Bombsweeper", WINDOW_WIDTH, WINDOW_HEIGHT))
 	{
 		return 1;
 	}
 	num_test = LoadSprite("assets/test.png");
+	num_1 = LoadSprite("assets/1.png");
+	num_2 = LoadSprite("assets/2.png");
+	num_3 = LoadSprite("assets/3.png");
+	num_4 = LoadSprite("assets/4.png");
+	num_5 = LoadSprite("assets/5.png");
+	num_6 = LoadSprite("assets/6.png");
+	num_7 = LoadSprite("assets/7.png");
+	num_8 = LoadSprite("assets/8.png");
+	num_9 = LoadSprite("assets/9.png");
+	flag = LoadSprite("assets/flag.png");
 	srand(time(0));
 	for (int i = 0; i < grid_bomb; i++)
 	{
@@ -139,6 +202,16 @@ int main(int argc, char* argv[])
 	StartLoop(Update, RenderFrame);
 
 	FreeSprite(num_test);
+	FreeSprite(num_1);
+	FreeSprite(num_2);
+	FreeSprite(num_3);
+	FreeSprite(num_4);
+	FreeSprite(num_5);
+	FreeSprite(num_6);
+	FreeSprite(num_7);
+	FreeSprite(num_8);
+	FreeSprite(num_9);
+	FreeSprite(flag);
 	CleanUp();
 	return 0;
 }
@@ -146,23 +219,31 @@ int mouse_last_x = 0, mouse_last_y = 0;
 //=============================================================================
 void Update(float dt)
 {
-
 	SDL_PumpEvents();
 	// Change subsystem of project from Windows to Console
 	// in order to see the stderr output
 	if (IsKeyDown(SDL_SCANCODE_ESCAPE))
 		ExitGame();
 	if ((mouse & SDL_BUTTON_LMASK) != 0) {
-		if(!myGrid.isVisible(mouse_x / grid_cell_size, mouse_y / grid_cell_size))
+		if (!myGrid.isVisible(mouse_x / grid_cell_size, mouse_y / grid_cell_size))
 			myGrid.destroyCell(mouse_x / grid_cell_size, mouse_y / grid_cell_size);
+	}
+	if ((mouse & SDL_BUTTON_RMASK) != 0) {
+		if (!myGrid.isVisible(mouse_x / grid_cell_size, mouse_y / grid_cell_size) && !myGrid.isFlaged(mouse_x / grid_cell_size, mouse_y / grid_cell_size))
+			myGrid.setFlaged(mouse_x / grid_cell_size, mouse_y / grid_cell_size, true);
 	}
 
 	mouse = SDL_GetMouseState(&mouse_x, &mouse_y);
+	if (!myGrid.isSelected(mouse_x / grid_cell_size, mouse_y / grid_cell_size))
+	{
+		sound_sel = Mix_LoadWAV("assets/sel.wav");
+		Mix_PlayChannel(-1, sound_sel,0);
+	}
 	myGrid.setSelected(mouse_last_x / grid_cell_size, mouse_last_y / grid_cell_size, false);
-	myGrid.setSelected(mouse_x/grid_cell_size,mouse_y/grid_cell_size,true);
+	myGrid.setSelected(mouse_x / grid_cell_size, mouse_y / grid_cell_size, true);
 	mouse_last_x = mouse_x;
-	mouse_last_y= mouse_y;
-
+	mouse_last_y = mouse_y;
+	myGrid.setStreak(); //kill streak
 }
 void RenderFrame(float interpolation)
 {
@@ -178,7 +259,7 @@ void RenderFrame(float interpolation)
 	};
 	SDL_SetRenderDrawColor(gRenderer, 10, 10, 10, 255); //BACKGROUND
 	SDL_RenderFillRect(gRenderer, &grid);
-	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255); //DEFAULT
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 	for (int h = 0; h < grid_height; h++)
 	{
 		for (int w = 0; w < grid_width; w++)
@@ -211,38 +292,42 @@ void RenderFrame(float interpolation)
 				switch(myGrid.getBombs(w, h))
 				{
 				case 1:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_1.texture, NULL, &cell);
 					break;
 				case 2:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_2.texture, NULL, &cell);
 					break;
 				case 3:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_3.texture, NULL, &cell);
 					break;
 				case 4:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_4.texture, NULL, &cell);
 					break;
 				case 5:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_5.texture, NULL, &cell);
 					break;
 				case 6:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_5.texture, NULL, &cell);
 					break;
 				case 7:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_7.texture, NULL, &cell);
 					break;
 				case 8:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_8.texture, NULL, &cell);
 					break;
 				case 9:
-					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
+					SDL_RenderCopy(gRenderer, num_8.texture, NULL, &cell);
 					break;
 				default:
 					SDL_RenderCopy(gRenderer, num_test.texture, NULL, &cell);
 					break;
 				}
 			}
-			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
+			if (myGrid.isFlaged(w, h))//FLAG
+			{
+				SDL_RenderCopy(gRenderer, flag.texture, NULL, &cell);
+			}
+			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255); //DEFAULT
 		}
 	}
 }
