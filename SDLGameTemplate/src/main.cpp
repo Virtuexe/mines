@@ -20,6 +20,10 @@ int grid_bomb = 40;
 int WINDOW_WIDTH = (grid_width * grid_cell_size);
 int WINDOW_HEIGHT = (grid_height * grid_cell_size);
 
+bool gameOver;
+int GameOverCurrentTime = 0;
+int GameOverTime = 100;
+
 Uint32 mouse;
 int mouse_x, mouse_y;
 // Street texture
@@ -107,7 +111,10 @@ public:
 			return;
 		setVisible(x, y, true);
 		if (isBomb(x, y)) //if destroyed cell is bomb
+		{
+			gameOver = true;
 			return;
+		}
 		for (int h = y - 1; h <= y + 1; h++)
 		{
 			for (int w = x - 1; w <= x + 1; w++)
@@ -224,9 +231,23 @@ void Update(float dt)
 	// in order to see the stderr output
 	if (IsKeyDown(SDL_SCANCODE_ESCAPE))
 		ExitGame();
+	if (gameOver)
+	{
+		
+		if (GameOverTime < GameOverCurrentTime)
+		{
+			ExitGame();
+		}
+		GameOverCurrentTime++;
+		return;
+	}
 	if ((mouse & SDL_BUTTON_LMASK) != 0) {
 		if (!myGrid.isVisible(mouse_x / grid_cell_size, mouse_y / grid_cell_size))
+		{
+			sound_sel = Mix_LoadWAV("assets/sel.wav");
+			Mix_PlayChannel(-1, sound_sel, 0);
 			myGrid.destroyCell(mouse_x / grid_cell_size, mouse_y / grid_cell_size);
+		}
 	}
 	if ((mouse & SDL_BUTTON_RMASK) != 0) {
 		if (!myGrid.isVisible(mouse_x / grid_cell_size, mouse_y / grid_cell_size) && !myGrid.isFlaged(mouse_x / grid_cell_size, mouse_y / grid_cell_size))
@@ -234,11 +255,6 @@ void Update(float dt)
 	}
 
 	mouse = SDL_GetMouseState(&mouse_x, &mouse_y);
-	if (!myGrid.isSelected(mouse_x / grid_cell_size, mouse_y / grid_cell_size))
-	{
-		sound_sel = Mix_LoadWAV("assets/sel.wav");
-		Mix_PlayChannel(-1, sound_sel,0);
-	}
 	myGrid.setSelected(mouse_last_x / grid_cell_size, mouse_last_y / grid_cell_size, false);
 	myGrid.setSelected(mouse_x / grid_cell_size, mouse_y / grid_cell_size, true);
 	mouse_last_x = mouse_x;
