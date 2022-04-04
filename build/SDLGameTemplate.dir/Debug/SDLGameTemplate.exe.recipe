@@ -2,10 +2,10 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Users\matya\OneDrive\Documents\SDL\mines\build\x64\Debug\ZERO_CHECK</FullPath>
+      <FullPath>D:\I2B_Pribyl\SDL\mines\build\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>D:\Users\matya\OneDrive\Documents\SDL\mines\build\bin\Debug\SDLGameTemplate.exe</FullPath>
+      <FullPath>D:\I2B_Pribyl\SDL\mines\build\bin\Debug\SDLGameTemplate.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

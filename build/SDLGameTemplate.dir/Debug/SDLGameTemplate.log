@@ -1,4 +1,4 @@
 ﻿  main.cpp
-D:\Users\matya\OneDrive\Documents\SDL\mines\SDLGameTemplate\src\main.cpp(16,27): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-D:\Users\matya\OneDrive\Documents\SDL\mines\SDLGameTemplate\src\main.cpp(194,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  SDLGameTemplate.vcxproj -> D:\Users\matya\OneDrive\Documents\SDL\mines\build\bin\Debug\SDLGameTemplate.exe
+D:\I2B_Pribyl\SDL\mines\SDLGameTemplate\src\main.cpp(16,27): warning C4244: inicializování: double se převádí na int; může dojít ke ztrátě dat.
+D:\I2B_Pribyl\SDL\mines\SDLGameTemplate\src\main.cpp(232,12): warning C4244: argument: time_t se převádí na unsigned int; může dojít ke ztrátě dat.
+  SDLGameTemplate.vcxproj -> D:\I2B_Pribyl\SDL\mines\build\bin\Debug\SDLGameTemplate.exe

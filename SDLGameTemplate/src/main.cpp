@@ -50,6 +50,20 @@ private:
 	int bombAmmount[grid_width][grid_height];
 	int bombStreak;
 public:
+	void restartGrid()
+	{
+		for (int h = 0; h < grid_height; h++)
+		{
+			for (int w = 0; w < grid_width; w++)
+			{
+				visible[w][h] = false;
+				bomb[w][h] = false;
+				selected[w][h] = false;
+				flaged[w][h] = false;
+				bombAmmount[w][h] = 0;
+			}
+		}
+	}
 	void cell(int x, int y, bool visible, bool bomb)
 	{
 		this->visible[x][y] = visible;
@@ -157,6 +171,30 @@ public:
 };
 Mix_Chunk* sound_sel;
 grid_cell myGrid; //create grid
+void startGame()
+{
+	gameOver = false;
+	GameOverCurrentTime = 0;
+	myGrid.restartGrid();
+
+	//reset mouse
+	mouse = NULL;
+	mouse = NULL;
+	for (int i = 0; i < grid_bomb; i++)
+	{
+		int x = rand() % grid_width;
+		int y = rand() % grid_height;
+		if (myGrid.isBomb(x, y))
+		{
+			i--;
+		}
+		else
+		{
+			myGrid.setBomb(x, y, true);
+		}
+	}
+
+}
 int main(int argc, char* argv[])
 {
 	int frequencia = 22050;
@@ -167,7 +205,7 @@ int main(int argc, char* argv[])
 	//Play audio test
 	//Mix_PlayChannel(0, sound_test , 0);
 	Mix_Chunk* sound_test;
-
+	
 	sound_test = Mix_LoadWAV("assets/test.wav");
 	
 
@@ -192,20 +230,9 @@ int main(int argc, char* argv[])
 	num_9 = LoadSprite("assets/9.png");
 	flag = LoadSprite("assets/flag.png");
 	srand(time(0));
-	for (int i = 0; i < grid_bomb; i++)
-	{
-		int x = rand() % grid_width;
-		int y = rand() % grid_height;
-		if (myGrid.isBomb(x, y))
-		{
-			i--;
-		}
-		else
-		{
-			myGrid.setBomb(x, y, true);
-		}
-	}
 	// Push functions to the game loop
+	startGame();
+
 	StartLoop(Update, RenderFrame);
 
 	FreeSprite(num_test);
@@ -229,6 +256,7 @@ void Update(float dt)
 	SDL_PumpEvents();
 	// Change subsystem of project from Windows to Console
 	// in order to see the stderr output
+	myGrid.setBomb(0, 0, true);
 	if (IsKeyDown(SDL_SCANCODE_ESCAPE))
 		ExitGame();
 	if (gameOver)
@@ -236,7 +264,7 @@ void Update(float dt)
 		
 		if (GameOverTime < GameOverCurrentTime)
 		{
-			ExitGame();
+			startGame();
 		}
 		GameOverCurrentTime++;
 		return;

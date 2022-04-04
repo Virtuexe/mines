@@ -1,6 +1,6 @@
-^D:\USERS\MATYA\ONEDRIVE\DOCUMENTS\SDL\MINES\SDLGAMETEMPLATE\CMAKELISTS.TXT
+^D:\I2B_PRIBYL\SDL\MINES\SDLGAMETEMPLATE\CMAKELISTS.TXT
 setlocal
-"D:\Program Files\CMake\bin\cmake.exe" -SD:/Users/matya/OneDrive/Documents/SDL/mines/SDLGameTemplate -BD:/Users/matya/OneDrive/Documents/SDL/mines/build --check-stamp-file D:/Users/matya/OneDrive/Documents/SDL/mines/build/CMakeFiles/generate.stamp
+D:\I2B_Pribyl\cmake-3.22.2-windows-x86_64\cmake-3.22.2-windows-x86_64\bin\cmake.exe -SD:/I2B_Pribyl/SDL/mines/SDLGameTemplate -BD:/I2B_Pribyl/SDL/mines/build --check-stamp-file D:/I2B_Pribyl/SDL/mines/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
