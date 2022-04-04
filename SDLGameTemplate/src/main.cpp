@@ -38,6 +38,7 @@ Sprite num_7;
 Sprite num_8;
 Sprite num_9;
 Sprite flag;
+Sprite retry;
 //=============================================================================-
 //information about cells in grid
 class grid_cell
@@ -229,6 +230,7 @@ int main(int argc, char* argv[])
 	num_8 = LoadSprite("assets/8.png");
 	num_9 = LoadSprite("assets/9.png");
 	flag = LoadSprite("assets/flag.png");
+	retry = LoadSprite("assets/retry.png");
 	srand(time(0));
 	// Push functions to the game loop
 	startGame();
@@ -246,6 +248,7 @@ int main(int argc, char* argv[])
 	FreeSprite(num_8);
 	FreeSprite(num_9);
 	FreeSprite(flag);
+	FreeSprite(retry);
 	CleanUp();
 	return 0;
 }
@@ -373,5 +376,18 @@ void RenderFrame(float interpolation)
 			}
 			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255); //DEFAULT
 		}
+	}
+
+	if (gameOver)
+	{
+		SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+		SDL_Rect button = {
+		WINDOW_WIDTH / 2,
+		WINDOW_HEIGHT / 2,
+		25,
+		25,
+		};
+		SDL_RenderFillRect(gRenderer, &button);
+		SDL_RenderCopy(gRenderer, retry.texture, NULL, &button);
 	}
 }
