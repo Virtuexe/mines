@@ -1,4 +1,5 @@
 ﻿  main.cpp
 D:\I2B_Pribyl\SDL\mines\SDLGameTemplate\src\main.cpp(16,27): warning C4244: inicializování: double se převádí na int; může dojít ke ztrátě dat.
-D:\I2B_Pribyl\SDL\mines\SDLGameTemplate\src\main.cpp(234,12): warning C4244: argument: time_t se převádí na unsigned int; může dojít ke ztrátě dat.
+D:\I2B_Pribyl\SDL\mines\SDLGameTemplate\src\main.cpp(71,12): warning C4244: argument: time_t se převádí na unsigned int; může dojít ke ztrátě dat.
+D:\I2B_Pribyl\SDL\mines\SDLGameTemplate\src\main.cpp(56,13): warning C4101: sound_test: neodkazovaná lokální proměnná
   SDLGameTemplate.vcxproj -> D:\I2B_Pribyl\SDL\mines\build\bin\Debug\SDLGameTemplate.exe
