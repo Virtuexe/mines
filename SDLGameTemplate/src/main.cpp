@@ -14,11 +14,11 @@ void RenderFrame(float dt);
 
 int grid_cell_size = 40;
 int grid_cell_sprite_size = grid_cell_size / 1.001;
-int const grid_width = 15;
-int const grid_height = 13;
+int const grid_width = 13;
+int const grid_height = 15;
 int grid_bomb = 40;
-int WINDOW_WIDTH = (grid_width * grid_cell_size);
-int WINDOW_HEIGHT = (grid_height * grid_cell_size);
+int WINDOW_WIDTH = (grid_height * grid_cell_size);
+int WINDOW_HEIGHT = (grid_width * grid_cell_size);
 
 bool gameOver;
 int GameOverCurrentTime = 0;
